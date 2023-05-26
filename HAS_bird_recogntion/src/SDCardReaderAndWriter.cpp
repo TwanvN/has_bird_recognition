@@ -22,7 +22,7 @@ void SDCardReaderAndWriter::WriteToSDCard(int birdType, float birdAccuracy, floa
     char* fileName = "/fs/test20.txt";
 
         //Open file or create new file if file doesn't exist
-        FILE *filePointer = fopen("/fs/test20.txt", "w");
+        FILE *filePointer = fopen("/fs/test21.txt", "w");
 
         if (filePointer == nullptr) {
             Serial.println("File not created");
@@ -50,8 +50,6 @@ void SDCardReaderAndWriter::WriteToSDCard(int birdType, float birdAccuracy, floa
         char output[1024];
         serializeJson(doc, output);
 
-        Serial.println(output);
-
         //Write JSON object to file
         fprintf(filePointer, output);
 
@@ -62,17 +60,28 @@ void SDCardReaderAndWriter::WriteToSDCard(int birdType, float birdAccuracy, floa
 }
 
 char* SDCardReaderAndWriter::ReadFileData(char* fileName) {
-    FILE* filePointer = fopen(fileName, "a");
-
-    int end = fseek(filePointer, 0, SEEK_END);
-    char buffer[end];
+    long lSize;
+    char *buffer;
+    size_t result;
     
-    /* Seek to the beginning of the file */
-    fseek(filePointer, 0, SEEK_SET);
+    FILE* filePointer = fopen(fileName, "r");
 
-    fread(buffer, end + 1, 1, filePointer);
-    printf("%s\n", buffer);
-    fclose(filePointer);
+    if (filePointer == nullptr) {
+        Serial.println("File not opened");
+        return nullptr;
+    }
+
+    Serial.println("File opened");
+
+    fseek(filePointer, 0, SEEK_END);
+    lSize = ftell(filePointer);
+    rewind(filePointer);
+
+    buffer = (char*)malloc(sizeof(char)*lSize);
+
+    result = fread(buffer, 1, lSize, filePointer);
+
+    Serial.println(buffer);
 
     return buffer;
 }

@@ -51,6 +51,7 @@ void loop() {
     Serial.println("Start write");
 
     sdcard.WriteToSDCard(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    sdcard.ReadFileData("/fs/test21.txt");
     Serial.println("Data written");
 
     delay(1000);
