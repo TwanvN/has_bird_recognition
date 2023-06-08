@@ -1,20 +1,24 @@
 // global includes
+#include <AudioProcessor.h>
 #include "RPC.h"
+#include <Arduino_PortentaBreakout.h>
 #include <Arduino.h>
 
 // m7 includes
-#include <Arduino_PortentaBreakout.h>
+
 #include <SDCardReaderAndWriter.h>
 
 #include <SDRAM.h>
 #include <NeuralNetwork.h>
+
 #include "FirmwareLoader.h"
+#include "testAudio.h"
 NeuralNetwork *nn = nullptr;
 float mockdata [128][547][1];
 
 // m7 defines
 SDCardReaderAndWriter sdcard;
-
+AudioProcessor audio_processor;
 
 int led = LEDB;
 tfLiteModel_t model;
@@ -48,6 +52,8 @@ void setup()
   int input_shape[3] = {128,547,1};
   int tensor_arena_size = 1024*1024*5;
   nn = new NeuralNetwork(model.data, tensor_arena_size, 11, input_shape);
+  audio_processor = AudioProcessor();
+
 }
 
 void loop()
@@ -58,7 +64,11 @@ void loop()
   digitalWrite(led, HIGH);
   delay(100);
   digitalWrite(led, LOW);
-  nn->InputData(mockdata);
+  Serial.println("Converting Audio:");
+  
+  auto converted_audio = audio_processor.ConvertToModeldata(test_audio);
+
+  nn->InputData(converted_audio);
   NeuralNetwork::result_t prediction = nn->Predict();
   Serial.print("Got predicted class: ");
   Serial.print(prediction.class_name);
