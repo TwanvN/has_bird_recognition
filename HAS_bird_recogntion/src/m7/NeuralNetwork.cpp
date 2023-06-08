@@ -85,7 +85,7 @@ void NeuralNetwork::InputData(float data[128][547][1]) {
 NeuralNetwork::result_t NeuralNetwork::Predict() {
 
     NeuralNetwork::result_t result = NeuralNetwork::result_t();
-    char* class_names[11] = {"Bird 1", "Bird 2", "Bird 3", "Bird 4", "Bird 5", "Bird 6", "Bird 7", "Bird 8", "Bird 9", "Bird 10", "No bird"};
+    char* class_names[11] = {"Wilde Eend", "Tjiftjaf", "Koolmees", "Houtduif", "Huismus", "Merel", "Winterkoning", "Fitis", "Vink", "Spreeuw", "Geen Vogel"};
 
     Serial.println("NeuralNetwork: Started prediction");
     tflite::MicroInterpreter* interpreter = this->interpreter;
