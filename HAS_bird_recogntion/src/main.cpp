@@ -1,58 +1,43 @@
-// #include "librosa.h"
-// #include <HASFSM.h>
-// #include <NeuralNetwork.h>
+// global includes
+#include "RPC.h"
 #include <Arduino.h>
+
+// m7 includes
+#include <Arduino_PortentaBreakout.h>
+#include <LoRaConnection.h>
+#include <CayenneLPP.h>
+#include <SDRAM.h>
+#include <NeuralNetwork.h>
 #include <SDCardReaderAndWriter.h>
 
-// NeuralNetwork nn = NeuralNetwork();
-
-// void setup() {
-//   // InitHASFSM();
-//   // birdSensorFSM.setup(FSM_States::STATE_INITIALIZING, FSM_Events::EVENTS_STATE_EXECUTED);
-//   // Serial.begin(115200);
-
-
-
-// }
-
-// void loop() {
-//   // nn.InputData(nullptr, nullptr, nullptr);
-//   // birdSensorFSM.loop();
-//   delay(1000);
-//   // Serial.println("Hello World");
-
-// }
-int myLED;
+// m7 defines
+//LoRaConnection loraConnection;
+//CayenneLPP cayenne(51);
 SDCardReaderAndWriter sdcard;
 
-void setup() {
+void setup()
+{
+  Serial.begin(115200);
+  // setupM4Firmware();
 
-   randomSeed(analogRead(0));
+  //loraConnection = LoRaConnection();
 
-   #ifdef CORE_CM7  
-      bootM4();  
-      myLED = LEDB; // built-in blue LED
-   #endif
-
-   #ifdef CORE_CM4  
-      myLED = LEDG; // built-in greeen LED
-   #endif   
-   pinMode(myLED, OUTPUT);
-
-   Serial.begin(9600);
-   Serial.println("Hello world!");
-
-  while (sdcard.InitSDCardReaderAndWriter()) {
+  //loraConnection.InitConnection();
+  // InitHASFSM();
+  // birdSensorFSM.setup(FSM_States::STATE_INITIALIZING,
+  // FSM_Events::EVENTS_STATE_EXECUTED);
+  // bootM4();
+    while (sdcard.InitSDCardReaderAndWriter()) {
     delay(1000);
   }
 }
 
-void loop() {
+void loop()
+{
     Serial.println("Start write");
 
     sdcard.WriteToSDCard(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    sdcard.ReadFileData("/fs/test21.txt");
     Serial.println("Data written");
 
     delay(1000);
-} 
+}
